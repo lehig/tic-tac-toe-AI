@@ -125,7 +125,7 @@ func (p botPlayer) setOpponentType(s string) {
 func isBoardClear(b Board, p botPlayer) bool {
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
-			fmt.Printf("Processing %d %d tile.\n", i, j)
+			// fmt.Printf("Processing %d %d tile.\n", i, j)
 			if b.tiles[i][j] != " " {
 				p.firstMove = []int{i,j}
 				return false
@@ -160,24 +160,24 @@ func checkRow(row int, x, y, z, pType, rowType string) []int {
 func isTwoInRow(b Board, p botPlayer) []int {
 	// This function finds if there are two in a row or column and 
 	// returns the one to stop the win 
-	fmt.Println("Checking opponents...")
+	// fmt.Println("Checking opponents...")
 	for row := 0; row < 3; row++{
 		x := b.tiles[row][0]
 		y := b.tiles[row][1]
 		z := b.tiles[row][2]
 
-		fmt.Printf("Row: %s %s %s \n", x, y, z)
+		// fmt.Printf("Row: %s %s %s \n", x, y, z)
 
 		if x != " " && y != " " && z != " "{
 			// do nothing 
 		} else {
 			// check opponents on board
 			check := checkRow(row, x, y, z, p.opponentType, "row")
-			fmt.Printf("Move: %v \n", check)
+			// fmt.Printf("Move: %v \n", check)
 			if check == nil {
 				// do nothing
 			} else {
-				fmt.Println("Returning move")
+				// fmt.Println("Returning move")
 				return check
 			}
 		}
@@ -194,7 +194,7 @@ func isTwoInRow(b Board, p botPlayer) []int {
 		} else {
 			// check opponents on board
 			check := checkRow(col, x, y, z, p.opponentType, "col")
-			fmt.Printf("Move: %v \n", check)
+			// fmt.Printf("Move: %v \n", check)
 			if check == nil {
 				// do nothing
 			} else {
@@ -203,20 +203,20 @@ func isTwoInRow(b Board, p botPlayer) []int {
 		}
 	}
 
-	fmt.Println("Checking bot...")
+	// fmt.Println("Checking bot...")
 
 	for row := 0; row < 3; row++{
 		x := b.tiles[row][0]
 		y := b.tiles[row][1]
 		z := b.tiles[row][2]
-		fmt.Printf("Row: %s %s %s \n", x, y, z)
+		// fmt.Printf("Row: %s %s %s \n", x, y, z)
 
 		if x != " " && y != " " && z != " "{
 			// do nothing 
 		} else {
 			// check placements on board
 			check := checkRow(row, x, y, z, p.pType, "row")
-			fmt.Printf("Move: %v \n", check)
+			// fmt.Printf("Move: %v \n", check)
 			if check == nil {
 				// do nothing
 			} else {
@@ -229,14 +229,14 @@ func isTwoInRow(b Board, p botPlayer) []int {
 		x := b.tiles[0][col]
 		y := b.tiles[1][col]
 		z := b.tiles[2][col]
-		fmt.Printf("Row: %s %s %s \n", x, y, z)
+		// fmt.Printf("Row: %s %s %s \n", x, y, z)
 
 		if x != " " && y != " " && z != " "{
 			// do nothing
 		} else {
 			// check placements on board
 			check := checkRow(col, x, y, z, p.pType, "col")
-			fmt.Printf("Move: %v \n", check)
+			// fmt.Printf("Move: %v \n", check)
 			if check == nil {
 				// do nothing
 			} else {
@@ -250,7 +250,7 @@ func isTwoInRow(b Board, p botPlayer) []int {
 
 func calculateNextMove(b Board, p botPlayer, turn int) []int {
 	if turn < 2{	
-		fmt.Println("Processing...")
+		// fmt.Println("Processing...")
 		if isBoardClear(b, p) {
 			return []int{0,2}
 		} else if b.checkMove(0,0){
@@ -263,7 +263,7 @@ func calculateNextMove(b Board, p botPlayer, turn int) []int {
 	} 
 	
 	if turn >= 2{	
-		fmt.Println("Processing")
+		// fmt.Println("Processing")
 		nextMove := isTwoInRow(b, p)
 		if nextMove == nil {
 			if b.checkMove(0,0){
