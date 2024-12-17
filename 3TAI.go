@@ -78,23 +78,23 @@ func (b Board) checkWin() bool{
 	
 	//checking the rows
 	for i := 0; i < 3; i++ {
-		if (b.tiles[i][0] == b.tiles[i][1] && b.tiles[i][1] == b.tiles[i][2] && b.tiles[i][0] != " "){
+		if (b.tiles[i][0] == b.tiles[i][1] && b.tiles[i][1] == b.tiles[i][2] && b.tiles[i][0] == b.tiles[i][2] && b.tiles[i][0] != " "){
 			return true
 		}
 	}
 	
 	// checking the columns
 	for i := 0; i < 3; i++ {
-		if (b.tiles[0][i] == b.tiles[1][i] && b.tiles[2][i] == b.tiles[i][2] && b.tiles[0][i] != " "){
+		if (b.tiles[0][i] == b.tiles[1][i] && b.tiles[1][i] == b.tiles[2][i] && b.tiles[0][i] == b.tiles[2][i] && b.tiles[0][i] != " "){
 			return true
 		}
 	}
 
 	// checking the diagonals
-	if b.tiles[0][0] == b.tiles[1][1] && b.tiles[1][1] == b.tiles[2][2] && b.tiles[0][0] != " "{
+	if b.tiles[0][0] == b.tiles[1][1] && b.tiles[1][1] == b.tiles[2][2] && b.tiles[0][0] == b.tiles[2][2] && b.tiles[0][0] != " "{
 		return true
 	}
-	if b.tiles[0][2] == b.tiles[1][1] && b.tiles[1][1] == b.tiles[2][0] && b.tiles[2][0] != " "{
+	if b.tiles[0][2] == b.tiles[1][1] && b.tiles[1][1] == b.tiles[2][0] && b.tiles[0][2] == b.tiles[2][0] && b.tiles[2][0] != " "{
 		return true
 	}
 
@@ -157,10 +157,7 @@ func checkRow(row int, x, y, z, pType, rowType string) []int {
 	return nil
 }
 
-func isTwoInRow(b Board, p botPlayer) []int {
-	// This function finds if there are two in a row or column and 
-	// returns the one to stop the win 
-	// fmt.Println("Checking opponents...")
+func checkOpponent(b Board, p botPlayer) []int {
 	for row := 0; row < 3; row++{
 		x := b.tiles[row][0]
 		y := b.tiles[row][1]
@@ -203,8 +200,10 @@ func isTwoInRow(b Board, p botPlayer) []int {
 		}
 	}
 
-	// fmt.Println("Checking bot...")
+	return nil
+}
 
+func checkBot(b Board, p botPlayer) []int {
 	for row := 0; row < 3; row++{
 		x := b.tiles[row][0]
 		y := b.tiles[row][1]
@@ -248,6 +247,30 @@ func isTwoInRow(b Board, p botPlayer) []int {
 	return nil
 }
 
+func isTwoInRow(b Board, p botPlayer, turn int) []int {
+	// This function finds if there are two in a row or column and 
+	// returns the one to stop the win 
+	
+	// checking the opponent markers first 
+	if turn == 3 {
+		nextMove := checkOpponent(b, p)
+		if nextMove == nil {
+			return checkBot(b, p)
+		} 
+		return nextMove
+	}
+
+	// checking the bot markers first 
+	nextMove := checkBot(b, p)
+	if nextMove == nil {
+		return checkOpponent(b, p)
+	} else {
+		return nextMove
+	}
+	
+	return nil
+}
+
 func calculateNextMove(b Board, p botPlayer, turn int) []int {
 	if turn < 2{	
 		// fmt.Println("Processing...")
@@ -264,7 +287,7 @@ func calculateNextMove(b Board, p botPlayer, turn int) []int {
 	
 	if turn >= 2{	
 		// fmt.Println("Processing")
-		nextMove := isTwoInRow(b, p)
+		nextMove := isTwoInRow(b, p, turn)
 		if nextMove == nil {
 			if b.checkMove(0,0){
 				return []int{0,0}
